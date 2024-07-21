@@ -12,6 +12,7 @@ public class MyProfileResponseTest {
     public void User으로_응답을_생성할_수_있다() {
         // given
         User user = User.builder()
+                .id(1L)
                 .email("kok202@naver.com")
                 .nickname("kok202")
                 .address("Seoul")
