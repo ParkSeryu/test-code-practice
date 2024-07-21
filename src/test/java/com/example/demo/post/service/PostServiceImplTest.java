@@ -1,31 +1,21 @@
 package com.example.demo.post.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
-import com.example.demo.mock.FakeMailSender;
 import com.example.demo.mock.FakePostRepository;
 import com.example.demo.mock.FakeUserRepository;
 import com.example.demo.mock.TestClockHolder;
-import com.example.demo.mock.TestUuidHolder;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
-import com.example.demo.user.service.CertificationService;
-import com.example.demo.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
 
-class PostServiceTest {
+class PostServiceImplTest {
 
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
 
     @BeforeEach
     void init() {
@@ -33,7 +23,7 @@ class PostServiceTest {
         FakeUserRepository fakeUserRepository = new FakeUserRepository();
         TestClockHolder testClockHolder = new TestClockHolder(1678530673958L);
 
-        this.postService = PostService.builder()
+        this.postServiceImpl = PostServiceImpl.builder()
                 .postRepository(fakePostRepository)
                 .userRepository(fakeUserRepository)
                 .clockHolder(testClockHolder)
@@ -74,7 +64,7 @@ class PostServiceTest {
         String email = "kok202@naver.com";
 
         // when
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -90,7 +80,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        Post result = postService.create(postCreate);
+        Post result = postServiceImpl.create(postCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -106,10 +96,10 @@ class PostServiceTest {
                 .build();
 
         // when
-        postService.update(1, postUpdate);
+        postServiceImpl.update(1, postUpdate);
 
         // then
-        Post postEntity = postService.getById(1);
+        Post postEntity = postServiceImpl.getById(1);
         assertThat(postEntity.getContent()).isEqualTo("hello world :)");
         assertThat(postEntity.getModifiedAt()).isEqualTo(1678530673958L);
     }

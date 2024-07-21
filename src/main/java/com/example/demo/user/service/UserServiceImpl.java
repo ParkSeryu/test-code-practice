@@ -4,6 +4,10 @@ import com.example.demo.common.domain.exception.CertificationCodeNotMatchedExcep
 import com.example.demo.common.domain.exception.ResourceNotFoundException;
 import com.example.demo.common.service.port.ClockHolder;
 import com.example.demo.common.service.port.UuidHolder;
+import com.example.demo.user.controller.port.AuthenticationService;
+import com.example.demo.user.controller.port.UserCreateService;
+import com.example.demo.user.controller.port.UserReadService;
+import com.example.demo.user.controller.port.UserUpdateService;
 import com.example.demo.user.domain.User;
 import com.example.demo.user.domain.UserStatus;
 import com.example.demo.user.domain.dto.UserCreate;
@@ -17,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Builder
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserCreateService, UserReadService, UserUpdateService, AuthenticationService {
 
     private final UserRepository userRepository;
-    private final CertificationService certificationService;
+    private final CertificationService certificationServiceImpl;
     private final UuidHolder uuidHolder;
     private final ClockHolder clockHolder;
 
@@ -38,7 +42,7 @@ public class UserService {
     public User create(UserCreate userCreate) {
         User user = User.from(userCreate, uuidHolder);
         user = userRepository.save(user);
-        certificationService.send(userCreate.getEmail(), user.getId(), user.getCertificationCode());
+        certificationServiceImpl.send(userCreate.getEmail(), user.getId(), user.getCertificationCode());
         return user;
     }
 

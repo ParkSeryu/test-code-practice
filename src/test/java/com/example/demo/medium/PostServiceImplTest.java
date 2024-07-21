@@ -8,7 +8,7 @@ import static org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import com.example.demo.post.domain.Post;
 import com.example.demo.post.domain.PostCreate;
 import com.example.demo.post.domain.PostUpdate;
-import com.example.demo.post.service.PostService;
+import com.example.demo.post.service.PostServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,10 +22,10 @@ import org.springframework.test.context.jdbc.SqlGroup;
         @Sql(value = "/sql/post-service-test-data.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD),
         @Sql(value = "/sql/delete-all-data.sql", executionPhase = ExecutionPhase.AFTER_TEST_METHOD)
 })
-class PostServiceTest {
+class PostServiceImplTest {
 
     @Autowired
-    private PostService postService;
+    private PostServiceImpl postServiceImpl;
 
     @Test
     void getById는_존재하는_게시물을_내려준다() {
@@ -33,7 +33,7 @@ class PostServiceTest {
         String email = "kok202@naver.com";
 
         // when
-        Post result = postService.getById(1);
+        Post result = postServiceImpl.getById(1);
 
         // then
         assertThat(result.getContent()).isEqualTo("helloworld");
@@ -49,7 +49,7 @@ class PostServiceTest {
                 .build();
 
         // when
-        Post result = postService.create(postCreate);
+        Post result = postServiceImpl.create(postCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -65,10 +65,10 @@ class PostServiceTest {
                 .build();
 
         // when
-        postService.update(1, postUpdate);
+        postServiceImpl.update(1, postUpdate);
 
         // then
-        Post postEntity = postService.getById(1);
+        Post postEntity = postServiceImpl.getById(1);
         assertThat(postEntity.getContent()).isEqualTo("hello world :)");
         assertThat(postEntity.getModifiedAt()).isGreaterThan(0);
     }
